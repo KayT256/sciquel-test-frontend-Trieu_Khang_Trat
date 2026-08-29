@@ -1,0 +1,405 @@
+/* I don't want to eye-ball the screenshot so I got many of these from the 
+SciQuel Tailwind theme (tailwind.config.js). Please note that I only get
+the necessary colors and do not look at the source code! I am doing everything
+from scratch. */
+
+:root {
+  /* Brand palette */
+  --sq-dark-text: #333333;
+  --sq-teal: #194b52;
+  --sq-teal-bright: #027373;
+  --sq-heading: #344e41;
+  --sq-muted: #878787;
+  --sq-card-bg: #f8f8ff;
+  --sq-card-border: #cccccc;
+
+  /* Headline card ramp. I tried with --sq-teal and --sq-teal-bright
+  but the colors are just not right. I used Mac's Digital Color Meter
+  to see what colors are the start and end of the gradient. It is still
+  quite off but close enough */
+  --sq-card-top: #456e88;
+  --sq-card-bottom: #7ea29f;
+
+  /* I found the brand's topic tag colours in src/components/TopicTag/index.tsx.
+  The colors of the tags in the provided picture are different 
+  from the brand colors. I wonder which one I shoudl use. Guess
+  I will stick with the barnd's? */
+  --topic-biology: #d15b2b;
+  --topic-chemistry: #c39075;
+  --topic-geology: #387270;
+
+  /* Type */
+  --font-ui: "Quicksand", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Alegreya Sans SC", "Quicksand", ui-sans-serif, sans-serif;
+  --font-serif: "Source Serif 4", ui-serif, Georgia, serif;
+
+  /* Layout */
+  --container: 1080px;
+  --gutter: 24px;
+
+  --radius-card: 8px;
+  --radius-media: 4px;
+  --radius-tag: 4px;
+
+  /* Every piece of story artwork sits under the same teal wash */
+  --art-wash: #194b5280;
+  --art-saturation: 0.68;
+
+  --ease-out: cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* Base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  color: var(--sq-dark-text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Page shell */
+
+.page {
+  max-width: calc(var(--container) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding: 56px var(--gutter) 64px;
+}
+
+.page__edge {
+  height: 44px;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid #ececec;
+  background: #f6f6f6;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.section__heading {
+  font-size: clamp(2rem, 3vw, 2.66rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--sq-heading);
+  margin-bottom: 28px;
+}
+
+/* Topic tag */
+
+.topic-tag {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: var(--tag-pad-y, 3px) var(--tag-pad-x, 11px);
+  border-radius: var(--radius-tag);
+  background: var(--topic-biology);
+  color: #fff;
+  font-size: var(--tag-size, 12px);
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.topic-tag[data-topic="biology"] { background: var(--topic-biology); }
+.topic-tag[data-topic="chemistry"] { background: var(--topic-chemistry); }
+.topic-tag[data-topic="geology"] { background: var(--topic-geology); }
+
+/* Headline story */
+
+.hero {
+  position: relative;
+  /* Leaves room for the byline, which hangs off the bottom of the card. */
+  margin-bottom: 86px;
+  transition: scale 0.3s var(--ease-out);
+}
+
+.hero:hover {
+  scale: 1.02;
+}
+
+.hero:hover .hero__media {
+  box-shadow: 0 10px 24px rgba(51, 51, 51, 0.1);
+}
+
+.hero:hover .hero__media:after {
+  opacity: 0;
+}
+
+.hero__media {
+  position: relative;
+  display: block;
+  width: 56.1%;
+  margin-left: auto;
+  aspect-ratio: 432 / 274;
+  border-radius: var(--radius-media);
+  overflow: hidden;
+}
+
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Wash */
+.hero__media::after,
+.card__thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--art-wash);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* I don't know if it is necessary, but just adding an overlay does not really make it
+feel like the picture provided. So i add a filter here */
+.hero__media img,
+.card__thumb img {
+  filter: saturate(var(--art-saturation));
+}
+
+.hero__card {
+  position: absolute;
+  left: 2.1%;
+  top: 50%;
+  translate: 0 -50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: 49.5%;
+  padding: 22px 38px 50px;
+  border-radius: var(--radius-card);
+  background: linear-gradient(
+    to top,
+    var(--sq-card-bottom) 0%,
+    var(--sq-card-top) 100%
+  );
+  box-shadow: 0 12px 28px rgba(25, 75, 82, 0.18);
+  --tag-size: 12px;
+}
+
+.hero__title {
+  margin: 25px 0 10px;
+  font-family: var(--font-display);
+  font-size: 33px;
+  line-height: 1.05;
+  color: #fff;
+}
+
+.hero__summary {
+  font-size: 21px;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.95);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+.hero__byline {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 14px;
+  font-family: var(--font-serif);
+  font-size: 22.5px;
+  color: var(--sq-teal);
+  white-space: nowrap;
+}
+
+.hero__sep {
+  padding-inline: 6px;
+}
+
+/* Article grid */
+
+.article-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px;
+  list-style: none;
+}
+
+/* It is not necessary for this demo because the cards are bascially the same
+but I will still put height: 100% in these for equal heights - it's just a few
+lines */
+.card {
+  height: 100%;
+}
+
+.card__link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 328px;
+  padding-bottom: 6px;
+  border: 1px solid var(--sq-card-border);
+  border-radius: var(--radius-card);
+  background: var(--sq-card-bg);
+  box-shadow: 0 1px 3px rgba(51, 51, 51, 0.06);
+  overflow: clip;
+  transition: scale 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
+  --tag-size: 9.5px;
+  --tag-pad-x: 7px;
+  --tag-pad-y: 3px;
+}
+
+.card__link:hover {
+  scale: 1.02;
+  box-shadow: 0 10px 24px rgba(51, 51, 51, 0.1);
+}
+
+.card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 18px 24px 14px;
+}
+
+.card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card__type {
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sq-muted);
+}
+
+.card__content {
+  flex: 1;
+  margin-top: 18px;
+}
+
+.card__title {
+  font-family: var(--font-display);
+  font-size: 25px;
+  line-height: 1.1;
+  color: var(--sq-dark-text);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.card__summary {
+  margin-top: 8px;
+  font-size: 16.6px;
+  line-height: 1.45;
+  color: var(--sq-dark-text);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.card__byline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  font-family: var(--font-serif);
+  font-size: 13.7px;
+  color: var(--sq-muted);
+}
+
+.card__thumb {
+  position: relative;
+  margin: 0 6px;
+  height: 107px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.3s ease, scale 0.5s var(--ease-out);
+}
+
+/* Hovering a card lifts the wash off its thumbnail. */
+.card__link:hover .card__thumb::after {
+  opacity: 0;
+}
+
+.card__link:hover .card__thumb img {
+  filter: none;
+  scale: 1.04;
+}
+
+/* "Read all recent" */
+
+.navigate-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-end;
+  margin-top: 39px;
+  color: var(--sq-dark-text);
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.navigate-link__text {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: from-font;
+}
+
+.navigate-link__icon {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  transition: translate 0.25s var(--ease-out);
+}
+
+.navigate-link:hover .navigate-link__icon {
+  translate: 4px 0;
+}
